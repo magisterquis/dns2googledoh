@@ -187,13 +187,13 @@ func handleQuery(uc *net.UDPConn, a net.Addr, b []byte, sni string) {
 		return
 	}
 	if 0 == len(rb) {
-		log.Printf("[%v] Empty HTTPS response body", a)
+		log.Printf("[%v] Empty HTTPS response body", tag)
 		return
 	}
 
 	/* Make sure the body is also DNS and put back the ID */
 	if err := m.Unpack(rb); nil != err {
-		log.Printf("[%v] Invalid DNS response %q: %v", a, rb, err)
+		log.Printf("[%v] Invalid DNS response %q: %v", tag, rb, err)
 		return
 	}
 	m.ID = id
@@ -201,11 +201,11 @@ func handleQuery(uc *net.UDPConn, a net.Addr, b []byte, sni string) {
 	/* Send the response back */
 	rb, err = m.AppendPack(rb[:0])
 	if nil != err {
-		log.Printf("[%v] Error packing DNS response: %v", a, err)
+		log.Printf("[%v] Error packing DNS response: %v", tag, err)
 		return
 	}
 	if _, err := uc.WriteTo(rb, a); nil != err {
-		log.Printf("[%v] Error sending response: %v", err)
+		log.Printf("[%v] Error sending response: %v", tag, err)
 	}
 	log.Printf("[%v] %s %s", a, m.Questions[0].Name, m.Questions[0].Type)
 }
