@@ -17,7 +17,6 @@ import (
 	"log"
 	"net"
 	"net/http"
-	"net/http/httputil"
 	"os"
 	"sync"
 
@@ -150,11 +149,6 @@ func handleQuery(uc *net.UDPConn, a net.Addr, b []byte, sni string) {
 		return
 	}
 	req.Host = host
-	o, err := httputil.DumpRequest(req, true) /* DEBUG */
-	if nil != err {
-		panic(err)
-	} /* DEBUG */
-	log.Printf("o: %q", o) /* DEBUG */
 
 	/* Send forth the request */
 	res, err := http.DefaultClient.Do(req)
